@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		"DDD",
+		"DRD",
+		"DDD"
+	],
+	"key": {
+		"D": {
+			"item": "projecte:dark_matter"
+		},
+		"R": {
+			"item": "projecte:relay_mk3"
+		}
+	},
+	"result": {
+		"count": 8,
+		"item": "transmutationconvenient:emc_pipe"
+	}
+}

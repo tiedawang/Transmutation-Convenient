@@ -1,0 +1,13 @@
+{
+	"transmutationconvenient.message.workbench_mismatch": "工作台不符，請重新開啟介面。",
+	"transmutationconvenient.message.bad_recipe": "配方資料不完整，無法填入。",
+	"transmutationconvenient.message.no_projecte": "缺少等價交換，無法用轉化桌補齊材料。",
+	"transmutationconvenient.message.not_learned": "有材料尚未學習轉化配方，無法補齊。",
+	"transmutationconvenient.message.not_enough_emc": "轉化桌的 EMC 不足，無法補齊材料。",
+	"transmutationconvenient.message.purchase_failed": "以 EMC 購買材料失敗。",
+	"transmutationconvenient.message.inventory_full": "背包已滿，無法清出合成格。",
+	"transmutationconvenient.message.learned": "已學習%1$s",
+	"block.transmutationconvenient.emc_pipe": "EMC管道",
+	"block.transmutationconvenient.auto_vending_machine": "自動販賣機",
+	"itemGroup.transmutationconvenient": "便捷轉化"
+}

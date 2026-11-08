@@ -1,0 +1,18 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "com.transmutationconvenient.mixin",
+	"compatibilityLevel": "JAVA_17",
+	"refmap": "transmutationconvenient.refmap.json",
+	"mixins": [
+		"BlockItemPlaceMixin",
+		"NBTManagerMixin",
+		"RepairTalismanMixin"
+	],
+	"client": [
+		"RecipeTransferServiceMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

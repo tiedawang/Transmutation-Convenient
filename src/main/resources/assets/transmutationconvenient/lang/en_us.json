@@ -1,0 +1,13 @@
+{
+	"transmutationconvenient.message.workbench_mismatch": "Workbench mismatch, please reopen the interface.",
+	"transmutationconvenient.message.bad_recipe": "Recipe data is incomplete; nothing was filled.",
+	"transmutationconvenient.message.no_projecte": "ProjectE is missing; cannot buy the missing materials.",
+	"transmutationconvenient.message.not_learned": "Some materials are not learned in the transmutation table.",
+	"transmutationconvenient.message.not_enough_emc": "Not enough EMC to buy the missing materials.",
+	"transmutationconvenient.message.purchase_failed": "Failed to purchase materials with EMC.",
+	"transmutationconvenient.message.inventory_full": "Inventory full; cannot clear the crafting grid.",
+	"transmutationconvenient.message.learned": "Learned %1$s",
+	"block.transmutationconvenient.emc_pipe": "EMC Pipe",
+	"block.transmutationconvenient.auto_vending_machine": "Auto Vending Machine",
+	"itemGroup.transmutationconvenient": "Transmutation Convenient"
+}

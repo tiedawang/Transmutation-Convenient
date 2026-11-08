@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		" R ",
+		"DFD",
+		"DDD"
+	],
+	"key": {
+		"R": {
+			"item": "projecte:relay_mk3"
+		},
+		"F": {
+			"item": "minecraft:furnace"
+		},
+		"D": {
+			"item": "projecte:dark_matter"
+		}
+	},
+	"result": {
+		"item": "transmutationconvenient:auto_vending_machine"
+	}
+}

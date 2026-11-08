@@ -1,0 +1,55 @@
+{
+	"multipart": [
+		{
+			"apply": {"model": "transmutationconvenient:block/emc_pipe_core"}
+		},
+		{
+			"when": {"north": "true", "flowing": "false"},
+			"apply": {"model": "transmutationconvenient:block/emc_pipe_arm_idle"}
+		},
+		{
+			"when": {"north": "true", "flowing": "true"},
+			"apply": {"model": "transmutationconvenient:block/emc_pipe_arm"}
+		},
+		{
+			"when": {"east": "true", "flowing": "false"},
+			"apply": {"model": "transmutationconvenient:block/emc_pipe_arm_idle", "y": 90}
+		},
+		{
+			"when": {"east": "true", "flowing": "true"},
+			"apply": {"model": "transmutationconvenient:block/emc_pipe_arm", "y": 90}
+		},
+		{
+			"when": {"south": "true", "flowing": "false"},
+			"apply": {"model": "transmutationconvenient:block/emc_pipe_arm_idle", "y": 180}
+		},
+		{
+			"when": {"south": "true", "flowing": "true"},
+			"apply": {"model": "transmutationconvenient:block/emc_pipe_arm", "y": 180}
+		},
+		{
+			"when": {"west": "true", "flowing": "false"},
+			"apply": {"model": "transmutationconvenient:block/emc_pipe_arm_idle", "y": 270}
+		},
+		{
+			"when": {"west": "true", "flowing": "true"},
+			"apply": {"model": "transmutationconvenient:block/emc_pipe_arm", "y": 270}
+		},
+		{
+			"when": {"up": "true", "flowing": "false"},
+			"apply": {"model": "transmutationconvenient:block/emc_pipe_arm_idle", "x": 270}
+		},
+		{
+			"when": {"up": "true", "flowing": "true"},
+			"apply": {"model": "transmutationconvenient:block/emc_pipe_arm", "x": 270}
+		},
+		{
+			"when": {"down": "true", "flowing": "false"},
+			"apply": {"model": "transmutationconvenient:block/emc_pipe_arm_idle", "x": 90}
+		},
+		{
+			"when": {"down": "true", "flowing": "true"},
+			"apply": {"model": "transmutationconvenient:block/emc_pipe_arm", "x": 90}
+		}
+	]
+}

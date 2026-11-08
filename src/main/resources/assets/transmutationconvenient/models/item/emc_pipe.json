@@ -1,0 +1,4 @@
+{
+	"parent": "transmutationconvenient:block/emc_pipe_core",
+	"render_type": "minecraft:cutout_mipped"
+}
