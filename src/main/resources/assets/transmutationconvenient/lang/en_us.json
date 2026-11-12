@@ -9,5 +9,13 @@
 	"transmutationconvenient.message.learned": "Learned %1$s",
 	"block.transmutationconvenient.emc_pipe": "EMC Pipe",
 	"block.transmutationconvenient.auto_vending_machine": "Auto Vending Machine",
+	"item.transmutationconvenient.black_hole_bucket": "Black Hole Bucket",
+	"item.transmutationconvenient.black_hole_bucket.mode.items": "Item Attraction Mode",
+	"item.transmutationconvenient.black_hole_bucket.mode.fluids": "Fluid Attraction Mode",
+	"item.transmutationconvenient.black_hole_bucket.mode.uncontrolled": "Uncontrolled Attraction Mode",
+	"container.transmutationconvenient.black_hole_bucket": "Black Hole Bucket",
+	"gui.transmutationconvenient.black_hole_bucket.fluid": "%1$s: %2$s Buckets",
+	"key.transmutationconvenient.cycle_mode": "Cycle Black Hole Bucket Mode",
+	"key.categories.transmutationconvenient": "Transmutation Convenient",
 	"itemGroup.transmutationconvenient": "Transmutation Convenient"
 }

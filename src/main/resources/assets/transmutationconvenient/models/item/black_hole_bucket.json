@@ -1,0 +1,6 @@
+{
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "transmutationconvenient:item/black_hole_bucket"
+	}
+}

@@ -9,5 +9,13 @@
 	"transmutationconvenient.message.learned": "已学习%1$s",
 	"block.transmutationconvenient.emc_pipe": "EMC管道",
 	"block.transmutationconvenient.auto_vending_machine": "自动贩卖机",
+	"item.transmutationconvenient.black_hole_bucket": "黑洞之桶",
+	"item.transmutationconvenient.black_hole_bucket.mode.items": "吸引物品模式",
+	"item.transmutationconvenient.black_hole_bucket.mode.fluids": "吸引液体模式",
+	"item.transmutationconvenient.black_hole_bucket.mode.uncontrolled": "不可控吸引模式",
+	"container.transmutationconvenient.black_hole_bucket": "黑洞之桶",
+	"gui.transmutationconvenient.black_hole_bucket.fluid": "%1$s：%2$s 桶",
+	"key.transmutationconvenient.cycle_mode": "切换黑洞之桶模式",
+	"key.categories.transmutationconvenient": "便捷转化",
 	"itemGroup.transmutationconvenient": "便捷转化"
 }

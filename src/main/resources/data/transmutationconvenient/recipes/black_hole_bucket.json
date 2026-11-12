@@ -1,0 +1,34 @@
+{
+	"type": "forge:conditional",
+	"recipes": [
+		{
+			"conditions": [
+				{
+					"type": "forge:mod_loaded",
+					"modid": "avaritia"
+				}
+			],
+			"recipe": {
+				"type": "minecraft:crafting_shapeless",
+				"category": "misc",
+				"ingredients": [
+					{
+						"item": "minecraft:bucket"
+					},
+					{
+						"item": "projecte:black_hole_band"
+					},
+					{
+						"tag": "transmutationconvenient:alchemical_bags"
+					},
+					{
+						"item": "avaritia:endest_pearl"
+					}
+				],
+				"result": {
+					"item": "transmutationconvenient:black_hole_bucket"
+				}
+			}
+		}
+	]
+}
