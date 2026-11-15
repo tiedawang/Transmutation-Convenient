@@ -28,6 +28,10 @@ import net.minecraft.world.phys.BlockHitResult;
  * {@code BlockItemPlaceMixin} 記到世界存檔的放置者表，之後每刻把 EMC 打進那位
  * 玩家的 ProjectE 帳戶。沒有放置紀錄的機器（指令放的、模組裝上前就存在的）退回
  * 「機器附近最近的玩家」，與轉化桌的規則相同。
+ *
+ * <p>潛行＋右鍵拿黑洞之桶賣東西那條路徑不在這裡：原版在潛行且手上有物品時會跳過方塊的
+ * {@code use}，直接走物品的 {@code useOn}。所以黑洞之桶自己攔下那個動作、呼叫本機的
+ * {@code sellBucketContents}，換到的 EMC 併進機器的暫存，之後照上面同一條流程入帳。
  */
 public class AutoVendingMachineBlock extends BaseEntityBlock {
 

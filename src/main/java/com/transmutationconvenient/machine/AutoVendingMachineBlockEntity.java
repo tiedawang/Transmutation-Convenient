@@ -1,5 +1,6 @@
 package com.transmutationconvenient.machine;
 
+import com.transmutationconvenient.bucket.BucketStorage;
 import com.transmutationconvenient.compat.ProjectEBridge;
 import com.transmutationconvenient.pipe.EmcTableOwners;
 import com.transmutationconvenient.registry.ModBlockEntities;
@@ -13,9 +14,15 @@ import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 自動販賣機的方塊實體 —— 一個大箱子份量的物品欄，加一格「暫存 EMC」。
@@ -107,6 +114,73 @@ public class AutoVendingMachineBlockEntity extends BlockEntity implements Contai
 
 	public Component getDisplayName() {
 		return Component.translatable("block.transmutationconvenient.auto_vending_machine");
+	}
+
+	/**
+	 * 把黑洞之桶裡所有可賣的物品與流體賣掉，EMC 併進本機暫存。
+	 *
+	 * <p>之後跟機器自己賣掉物品一樣，由 {@link #tick(ServerLevel)} 的第一步把暫存 EMC
+	 * 打進放置者帳戶——不是直接打進拿桶那位玩家的帳戶。
+	 *
+	 * <p>物品用 ProjectE 的出售價；流體每一整桶的價值＝「裝著該流體的桶」的 EMC
+	 * −「空桶」的 EMC，再按實際 mB 數折算。賣不掉的（出售價 0、桶的 EMC 差 ≤ 0、
+	 * 折算後不足 1 EMC）留在桶裡。
+	 *
+	 * @return 這次賣出的 EMC 總額
+	 */
+	public long sellBucketContents(ItemStack bucketStack) {
+		BucketStorage storage = BucketStorage.fromStack(bucketStack);
+		long total = 0L;
+		List<Integer> itemSlots = new ArrayList<>();
+		for (int slot = 0; slot < BucketStorage.SLOT_COUNT; slot++) {
+			long count = storage.getCount(slot);
+			if (count <= 0L) {
+				continue;
+			}
+			long unitValue = ProjectEBridge.sellValueOf(storage.getTemplate(slot));
+			if (unitValue <= 0L) {
+				continue;
+			}
+			total += unitValue * count;
+			itemSlots.add(slot);
+		}
+
+		long emptyBucketValue = ProjectEBridge.valueOf(new ItemStack(Items.BUCKET));
+		List<Integer> fluidIndexes = new ArrayList<>();
+		List<FluidStack> fluids = storage.getFluids();
+		for (int i = 0; i < fluids.size(); i++) {
+			FluidStack fluid = fluids.get(i);
+			FluidStack oneBucket = fluid.copy();
+			oneBucket.setAmount(1000);
+			ItemStack filledBucket = FluidUtil.getFilledBucket(oneBucket);
+			if (filledBucket.isEmpty()) {
+				continue;
+			}
+			// 流體的 EMC 至少算 1：水桶與空桶的 EMC 差可能是 0，但水太常見，
+			// 沒有理由讓一整桶水完全賣不掉。
+			long bucketValue = Math.max(1L, ProjectEBridge.valueOf(filledBucket) - emptyBucketValue);
+			long value = bucketValue * fluid.getAmount() / 1000L;
+			if (value <= 0L) {
+				continue;
+			}
+			total += value;
+			fluidIndexes.add(i);
+		}
+
+		if (total <= 0L) {
+			return 0L;
+		}
+		for (int slot : itemSlots) {
+			storage.clearSlot(slot);
+		}
+		for (int i = fluidIndexes.size() - 1; i >= 0; i--) {
+			int index = fluidIndexes.get(i);
+			storage.extractFluid(index, storage.getFluid(index).getAmount());
+		}
+		storage.saveTo(bucketStack);
+		pendingEmc += total;
+		setChanged();
+		return total;
 	}
 
 	// ------------------------------------------------------------------

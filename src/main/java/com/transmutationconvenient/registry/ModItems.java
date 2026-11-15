@@ -1,6 +1,7 @@
 package com.transmutationconvenient.registry;
 
 import com.transmutationconvenient.TransmutationConvenientMod;
+import com.transmutationconvenient.bucket.BlackHoleBucketItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
@@ -28,7 +29,11 @@ public final class ModItems {
 			ITEMS.register("auto_vending_machine",
 					() -> new BlockItem(ModBlocks.AUTO_VENDING_MACHINE.get(), new Item.Properties()));
 
-	/** 本模組專屬創造模式物品欄「便捷轉化」—— EMC 管道與自動販賣機。 */
+	public static final RegistryObject<Item> BLACK_HOLE_BUCKET =
+			ITEMS.register("black_hole_bucket",
+					() -> new BlackHoleBucketItem(new Item.Properties().stacksTo(1)));
+
+	/** 本模組專屬創造模式物品欄「便捷轉化」—— EMC 管道、自動販賣機、黑洞之桶。 */
 	public static final RegistryObject<CreativeModeTab> TAB = TABS.register(
 			"transmutationconvenient",
 			() -> CreativeModeTab.builder()
@@ -37,6 +42,7 @@ public final class ModItems {
 					.displayItems((params, output) -> {
 						output.accept(EMC_PIPE.get());
 						output.accept(AUTO_VENDING_MACHINE.get());
+						output.accept(BLACK_HOLE_BUCKET.get());
 					})
 					.build());
 

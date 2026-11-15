@@ -1,43 +1,43 @@
 modLoader="javafml"
-loaderVersion="[47,)"
-license="All Rights Reserved"
+loaderVersion="${loader_version_range}"
+license="${mod_license}"
 
 [[mods]]
-modId="transmutationconvenient"
-version="0.1.0"
-displayName="Transmutation Convenient 便捷轉化"
-authors="likelao"
-description='''讓等價交換重置版與其他模組更好兼容的附屬模組'''
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+authors="${mod_authors}"
+description='''${mod_description}'''
 
-[[dependencies.transmutationconvenient]]
+[[dependencies.${mod_id}]]
     modId="forge"
     mandatory=true
-    versionRange="[47,)"
+    versionRange="${forge_version_range}"
     ordering="NONE"
     side="BOTH"
 
-[[dependencies.transmutationconvenient]]
+[[dependencies.${mod_id}]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.20.1,1.21)"
+    versionRange="${minecraft_version_range}"
     ordering="NONE"
     side="BOTH"
 
-[[dependencies.transmutationconvenient]]
+[[dependencies.${mod_id}]]
     modId="jei"
     mandatory=true
     versionRange="[0,)"
     ordering="NONE"
     side="BOTH"
 
-[[dependencies.transmutationconvenient]]
+[[dependencies.${mod_id}]]
     modId="projecte"
     mandatory=true
     versionRange="[0,)"
     ordering="NONE"
     side="BOTH"
 
-[[dependencies.transmutationconvenient]]
+[[dependencies.${mod_id}]]
     modId="avaritia"
     mandatory=false
     versionRange="[0,)"
