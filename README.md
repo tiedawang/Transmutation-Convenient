@@ -11,6 +11,7 @@
 ### 非必要的前置Mod，缺失可能導致部分內容缺失：
 - 《Re:Avaritia》
 - 《Colytra》
+- 《Ice And Fire Community Edition》
 
 ---
 
@@ -19,6 +20,8 @@
 - 修復在《ProjectE》中， `原版鞘翅沒有EMC值` & `即使用指令手動添加EMC值，也無法添加預期的數值` & `成功使用指令添加EMC值後，耐久不為滿的鞘翅仍然沒有EMC值` 的問題；將鞘翅的EMC值添加為5000。
 
 - 修復在《Re:Avaritia》中，使用 `終焉鍛造台` 合成出的物品，不會被自動添加EMC值的問題。
+
+- 修復當《IceAndFire Community Edition》、《ProjectE》、《ProjectE Integration》同時裝載時，會使所有物品的EMC值都無法正確加載的問題
 
 ### 添加的功能：
 

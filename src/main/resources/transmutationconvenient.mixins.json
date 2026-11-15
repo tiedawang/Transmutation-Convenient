@@ -6,6 +6,7 @@
 	"refmap": "transmutationconvenient.refmap.json",
 	"mixins": [
 		"BlockItemPlaceMixin",
+		"CraftingMapperGuardMixin",
 		"NBTManagerMixin",
 		"RepairTalismanMixin"
 	],
