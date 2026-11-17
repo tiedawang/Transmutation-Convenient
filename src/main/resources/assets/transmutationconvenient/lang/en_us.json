@@ -7,6 +7,8 @@
 	"transmutationconvenient.message.purchase_failed": "Failed to purchase materials with EMC.",
 	"transmutationconvenient.message.inventory_full": "Inventory full; cannot clear the crafting grid.",
 	"transmutationconvenient.message.learned": "Learned %1$s",
+	"transmutationconvenient.command.projecte.simplified": "ProjectE simplified",
+	"transmutationconvenient.command.projecte.restored": "ProjectE simplification disabled",
 	"block.transmutationconvenient.emc_pipe": "EMC Pipe",
 	"block.transmutationconvenient.auto_vending_machine": "Auto Vending Machine",
 	"item.transmutationconvenient.black_hole_bucket": "Black Hole Bucket",

@@ -16,6 +16,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 import java.util.ArrayList;
@@ -35,11 +36,12 @@ import java.util.function.Supplier;
  * <p>服務端 → 客戶端：
  * <ul>
  *   <li>{@link BucketDataPacket}：同步黑洞之桶每一格的實際總量與流體清單。</li>
+ *   <li>{@link ProjectESimplificationPacket}：同步 ProjectE 精簡狀態，重建創造標籤。</li>
  * </ul>
  */
 public final class NetworkHandler {
 
-	private static final String PROTOCOL = "1";
+	private static final String PROTOCOL = "2";
 
 	public static SimpleChannel CHANNEL;
 
@@ -58,6 +60,15 @@ public final class NetworkHandler {
 				BucketDataPacket::encode, BucketDataPacket::decode, BucketDataPacket::handle);
 		CHANNEL.registerMessage(3, ExtractFluidPacket.class,
 				ExtractFluidPacket::encode, ExtractFluidPacket::decode, ExtractFluidPacket::handle);
+		CHANNEL.registerMessage(4, ProjectESimplificationPacket.class,
+				ProjectESimplificationPacket::encode, ProjectESimplificationPacket::decode,
+				ProjectESimplificationPacket::handle);
+	}
+
+	/** 伺服器 → 客戶端：同步 ProjectE 精簡狀態，讓創造標籤重建。 */
+	public static void sendProjectESimplification(ServerPlayer player, boolean simplified) {
+		CHANNEL.send(PacketDistributor.PLAYER.with(() -> player),
+				new ProjectESimplificationPacket(simplified));
 	}
 
 	/** 客戶端 → 服務端：這個工作台、這些材料，請幫我填進合成格（缺的用 EMC 買）。 */
@@ -180,6 +191,25 @@ public final class NetworkHandler {
 			NetworkEvent.Context context = ctx.get();
 			context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
 					() -> () -> ClientPacketHandlers.applyBucketData(containerId, counts, fluids)));
+			context.setPacketHandled(true);
+		}
+	}
+
+	/** 伺服器 → 客戶端：ProjectE 精簡開關；客戶端收到後重建創造標籤。 */
+	public record ProjectESimplificationPacket(boolean simplified) {
+
+		public void encode(FriendlyByteBuf buf) {
+			buf.writeBoolean(simplified);
+		}
+
+		public static ProjectESimplificationPacket decode(FriendlyByteBuf buf) {
+			return new ProjectESimplificationPacket(buf.readBoolean());
+		}
+
+		public void handle(Supplier<NetworkEvent.Context> ctx) {
+			NetworkEvent.Context context = ctx.get();
+			context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+					() -> () -> ClientPacketHandlers.applyProjectESimplification(simplified)));
 			context.setPacketHandled(true);
 		}
 	}

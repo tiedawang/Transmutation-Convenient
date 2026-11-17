@@ -1,6 +1,7 @@
 package com.transmutationconvenient.client;
 
 import com.transmutationconvenient.bucket.BlackHoleBucketMenu;
+import com.transmutationconvenient.projecte.ProjectESimplificationClientState;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -17,5 +18,10 @@ public final class ClientPacketHandlers {
 		if (minecraft.player != null && minecraft.player.containerMenu instanceof BlackHoleBucketMenu menu) {
 			menu.applyClientData(containerId, counts, fluids);
 		}
+	}
+
+	public static void applyProjectESimplification(boolean simplified) {
+		ProjectESimplificationClientState.setEnabled(simplified);
+		ClientCreativeTabs.rebuild();
 	}
 }

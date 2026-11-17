@@ -7,6 +7,8 @@
 	"transmutationconvenient.message.purchase_failed": "以 EMC 購買材料失敗。",
 	"transmutationconvenient.message.inventory_full": "背包已滿，無法清出合成格。",
 	"transmutationconvenient.message.learned": "已學習%1$s",
+	"transmutationconvenient.command.projecte.simplified": "已精簡《ProjectE》",
+	"transmutationconvenient.command.projecte.restored": "已解除精簡《ProjectE》",
 	"block.transmutationconvenient.emc_pipe": "EMC管道",
 	"block.transmutationconvenient.auto_vending_machine": "自動販賣機",
 	"item.transmutationconvenient.black_hole_bucket": "黑洞之桶",
