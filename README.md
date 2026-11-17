@@ -23,6 +23,8 @@
 
 - 修復當《IceAndFire Community Edition》、《ProjectE》、《ProjectE Integration》同時裝載時，會使所有物品的 EMC 值都無法正確加載的問題。
 
+- 解決《ProjectE》中的 `暗物質劍` `紅物質劍` `紅物質拳劍` 默認按 C 鍵觸發的群體傷害效果，在 `虐殺敵對生物` 狀態下，既不會傷害《IceAndFire Community Edition》中已被馴服的 `龍` ，也不會傷害尚未被馴服的 `龍`的問題。
+
 ### 添加的功能：
 
 - 在已學習轉化配方並且擁有足量 EMC 的情況下，在《Minecraft》原版的： `工作台` ，以及《Re:Avaritia》的 `伏聆工作台` `煉獄工作台` `終末工作台` `終焉工作台` `終焉鍛造台` 中。使用《Just Enough Items》的一鍵填入材料的功能時，將會自動從你的個人 EMC 賬戶中購買材料來彌補不足的材料。
@@ -40,6 +42,8 @@
 - 為《IceAndFire Community Edition》中的 `龍息鍛爐` 添加配方映射器，使其製造的物品可以被《ProjectE》根據合成配方自動賦予 EMC 值
 
 - 添加指令 `/sePE true` ，使用後將禁用《ProjectE》中的部分物品與裝備並改變部分物品的合成配方。使用 `/tcPE false` 指令，則可解除。針對認為過於強大的裝備會破壞遊戲平衡，同時又仍想使用《ProjectE》中的部分飾品的人設計。
+
+- 使當玩家騎乘《IceAndFire Community Edition》中的 `龍` 時，在從 `龍` 身上脫離時，將獲得一次免疫摔落傷害的效果，並在觸發之後清除。
 
 ### 已發現並修復的問題:
 

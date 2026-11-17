@@ -8,6 +8,7 @@
 		"BlockItemPlaceMixin",
 		"CraftingMapperGuardMixin",
 		"NBTManagerMixin",
+		"ProjectEHostileAoeMixin",
 		"RepairTalismanMixin"
 	],
 	"client": [
