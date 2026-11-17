@@ -34,7 +34,7 @@ public final class ProjectESimplificationCreativeTabEvents {
 
 		List<ItemStack> toRemove = new ArrayList<>();
 		for (Map.Entry<ItemStack, CreativeModeTab.TabVisibility> entry : event.getEntries()) {
-			if (ProjectESimplificationService.isDisabledItem(entry.getKey().getItem())) {
+			if (ProjectESimplificationContent.isDisabledItem(entry.getKey().getItem())) {
 				toRemove.add(entry.getKey());
 			}
 		}

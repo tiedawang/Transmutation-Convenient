@@ -1,6 +1,9 @@
 package com.transmutationconvenient.projecte;
 
 import com.transmutationconvenient.TransmutationConvenientMod;
+import moze_intel.projecte.api.proxy.IEMCProxy;
+import moze_intel.projecte.emc.EMCMappingHandler;
+import moze_intel.projecte.network.PacketHandler;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -24,8 +27,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * ProjectE 精簡模式：移除暗物質／紅物質／寶石套裝與能量收集器 MK1～3 的合成配方，
- * 並把便攜式轉化桌、暗物質台座的配方換成較便宜的版本。
+ * ProjectE 精簡模式：移除暗物質／紅物質／寶石套裝、能量收集器 MK1～3、
+ * 紅物質拳劍與紅物質釘頭錘的合成配方；便攜式轉化桌、暗物質台座的配方換成
+ * 較便宜的版本，牠們的 EMC 也跟著換成精簡版材料總價。被禁用的物品 EMC 不變。
  *
  * <p>做法是直接替換伺服器 {@link RecipeManager} 的配方表，再發送
  * {@link ClientboundUpdateRecipesPacket} 讓客戶端（含 JEI）同步。還原時使用第一次
@@ -38,13 +42,6 @@ public final class ProjectESimplificationService {
 			new ResourceLocation("projecte", "transmutation_tablet");
 	private static final ResourceLocation DARK_MATTER_PEDESTAL =
 			new ResourceLocation("projecte", "dm_pedestal");
-
-	/** 要從配方表與創造標籤移除的物品／配方。 */
-	private static final Set<ResourceLocation> DISABLED_IDS = Set.of(
-			id("dm_helmet"), id("dm_chestplate"), id("dm_leggings"), id("dm_boots"),
-			id("rm_helmet"), id("rm_chestplate"), id("rm_leggings"), id("rm_boots"),
-			id("gem_helmet"), id("gem_chestplate"), id("gem_leggings"), id("gem_boots"),
-			id("collector_mk1"), id("collector_mk2"), id("collector_mk3"));
 
 	/** 配方仍在，但內容要換掉的物品。 */
 	private static final Set<ResourceLocation> MODIFIED_IDS = Set.of(
@@ -94,17 +91,11 @@ public final class ProjectESimplificationService {
 	/** 伺服器端配方表是否還是完整版（用來判斷 /reload 後要不要重新精簡）。 */
 	public static boolean hasDisabledRecipes(MinecraftServer server) {
 		for (Recipe<?> recipe : server.getRecipeManager().getRecipes()) {
-			if (DISABLED_IDS.contains(recipe.getId())) {
+			if (ProjectESimplificationContent.isDisabledId(recipe.getId())) {
 				return true;
 			}
 		}
 		return false;
-	}
-
-	/** 這個物品是否屬於精簡時要從創造標籤移除的內容。 */
-	public static boolean isDisabledItem(Item item) {
-		ResourceLocation id = BuiltInRegistries.ITEM.getKey(item);
-		return id != null && DISABLED_IDS.contains(id);
 	}
 
 	/** 把目前的配方表同步給所有玩家；JEI 會透過 RecipesUpdatedEvent 重建。 */
@@ -118,78 +109,94 @@ public final class ProjectESimplificationService {
 
 	private static void simplify(MinecraftServer server) {
 		RecipeManager manager = server.getRecipeManager();
-		Map<ResourceLocation, Recipe<?>> next = new LinkedHashMap<>();
+		Map<ResourceLocation, Recipe<?>> simplified = new LinkedHashMap<>();
 
+		// 先把原始配方留下來，並直接建立「不含禁用項目」的新配方表。
 		for (Recipe<?> recipe : manager.getRecipes()) {
 			ResourceLocation id = recipe.getId();
-			if (DISABLED_IDS.contains(id) || MODIFIED_IDS.contains(id)) {
-				// putIfAbsent：/reload 後看到的是原始配方，重複套用時也不會把
-				// 已經換過的便宜配方當成原始配方存起來。
+			if (ProjectESimplificationContent.isDisabledId(id) || MODIFIED_IDS.contains(id)) {
 				ORIGINALS.putIfAbsent(id, recipe);
 				continue;
 			}
-			next.put(id, recipe);
+			simplified.put(id, recipe);
 		}
 
+		// 便攜桌／台座用精簡版配方；ProjectE 會據此重新算出新的 EMC。
 		Recipe<?> tablet = createTablet(true);
 		if (tablet != null) {
-			next.put(TRANSMUTATION_TABLET, tablet);
+			simplified.put(TRANSMUTATION_TABLET, tablet);
 		}
 		Recipe<?> pedestal = createPedestal(true);
 		if (pedestal != null) {
-			next.put(DARK_MATTER_PEDESTAL, pedestal);
+			simplified.put(DARK_MATTER_PEDESTAL, pedestal);
 		}
 
-		manager.replaceRecipes(next.values());
+		// 禁用配方已經不在這張表裡；ProjectE 重算時會自然讓它們的 EMC 消失。
+		manager.replaceRecipes(simplified.values());
+		remapEmc(server);
+
 		TransmutationConvenientMod.LOGGER.info(
 				"[便捷轉化] 已精簡 ProjectE：移除 {} 個配方，替換 {} 個配方。",
-				DISABLED_IDS.size(), MODIFIED_IDS.size());
+				ProjectESimplificationContent.disabledIds().size(), MODIFIED_IDS.size());
 		logValidation(server);
 	}
 
 	private static void restore(MinecraftServer server) {
 		RecipeManager manager = server.getRecipeManager();
-		Map<ResourceLocation, Recipe<?>> next = new LinkedHashMap<>();
+		Map<ResourceLocation, Recipe<?>> original = new LinkedHashMap<>();
 
 		for (Recipe<?> recipe : manager.getRecipes()) {
 			ResourceLocation id = recipe.getId();
-			if (DISABLED_IDS.contains(id) || MODIFIED_IDS.contains(id)) {
+			if (ProjectESimplificationContent.isDisabledId(id) || MODIFIED_IDS.contains(id)) {
 				continue;
 			}
-			next.put(id, recipe);
+			original.put(id, recipe);
 		}
 
-		for (ResourceLocation id : DISABLED_IDS) {
-			Recipe<?> original = ORIGINALS.get(id);
-			if (original != null) {
-				next.put(id, original);
+		for (ResourceLocation id : ProjectESimplificationContent.disabledIds()) {
+			Recipe<?> saved = ORIGINALS.get(id);
+			if (saved != null) {
+				original.put(id, saved);
 			}
 		}
 		for (ResourceLocation id : MODIFIED_IDS) {
-			Recipe<?> original = ORIGINALS.get(id);
-			if (original != null) {
-				next.put(id, original);
+			Recipe<?> saved = ORIGINALS.get(id);
+			if (saved != null) {
+				original.put(id, saved);
 			}
 		}
 
 		// 保險：若 ORIGINALS 沒有便攜桌／台座（例如狀態是在舊存檔直接改出來的），
 		// 至少要用程式重建原版配方，不能讓這兩個配方消失。
-		if (!next.containsKey(TRANSMUTATION_TABLET)) {
-			Recipe<?> original = createTablet(false);
-			if (original != null) {
-				next.put(TRANSMUTATION_TABLET, original);
+		if (!original.containsKey(TRANSMUTATION_TABLET)) {
+			Recipe<?> fallback = createTablet(false);
+			if (fallback != null) {
+				original.put(TRANSMUTATION_TABLET, fallback);
 			}
 		}
-		if (!next.containsKey(DARK_MATTER_PEDESTAL)) {
-			Recipe<?> original = createPedestal(false);
-			if (original != null) {
-				next.put(DARK_MATTER_PEDESTAL, original);
+		if (!original.containsKey(DARK_MATTER_PEDESTAL)) {
+			Recipe<?> fallback = createPedestal(false);
+			if (fallback != null) {
+				original.put(DARK_MATTER_PEDESTAL, fallback);
 			}
 		}
 
-		manager.replaceRecipes(next.values());
+		manager.replaceRecipes(original.values());
+		remapEmc(server);
 		TransmutationConvenientMod.LOGGER.info("[便捷轉化] 已解除 ProjectE 精簡。");
 		logValidation(server);
+	}
+
+	/**
+	 * 讓 ProjectE 用目前的配方表重新推算 EMC，並把結果同步給客戶端。
+	 *
+	 * <p>精簡時，被禁用的配方已經先從配方表拿掉，所以重算後它們自然沒有 EMC；
+	 * 便攜桌／台座則用精簡版配方算出新的較低 EMC。還原時把原始配方放回再重算。
+	 */
+	private static void remapEmc(MinecraftServer server) {
+		EMCMappingHandler.map(server.getServerResources().managers(),
+				server.registryAccess(), server.getResourceManager());
+		PacketHandler.sendFragmentedEmcPacketToAll();
 	}
 
 	/**
@@ -199,13 +206,25 @@ public final class ProjectESimplificationService {
 	private static void logValidation(MinecraftServer server) {
 		RecipeManager manager = server.getRecipeManager();
 		long disabledLeft = manager.getRecipes().stream()
-				.filter(recipe -> DISABLED_IDS.contains(recipe.getId()))
+				.filter(recipe -> ProjectESimplificationContent.isDisabledId(recipe.getId()))
 				.count();
 		TransmutationConvenientMod.LOGGER.info(
 				"[便捷轉化] 配方驗證：移除目標剩 {} 個；便攜桌={}；台座={}",
 				disabledLeft,
 				describe(manager.byKey(TRANSMUTATION_TABLET).orElse(null)),
 				describe(manager.byKey(DARK_MATTER_PEDESTAL).orElse(null)));
+		TransmutationConvenientMod.LOGGER.info(
+				"[便捷轉化] EMC 驗證：dm_helmet={}；rm_katar={}；rm_morning_star={}；便攜桌={}；台座={}",
+				emcValue("projecte:dm_helmet"),
+				emcValue("projecte:rm_katar"),
+				emcValue("projecte:rm_morning_star"),
+				emcValue("projecte:transmutation_tablet"),
+				emcValue("projecte:dm_pedestal"));
+	}
+
+	private static long emcValue(String id) {
+		Item item = item(id);
+		return item == null ? -1L : IEMCProxy.INSTANCE.getValue(new ItemStack(item));
 	}
 
 	private static String describe(Recipe<?> recipe) {
@@ -288,9 +307,5 @@ public final class ProjectESimplificationService {
 	private static Item item(String id) {
 		Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(id));
 		return item == Items.AIR ? null : item;
-	}
-
-	private static ResourceLocation id(String path) {
-		return new ResourceLocation("projecte", path);
 	}
 }
