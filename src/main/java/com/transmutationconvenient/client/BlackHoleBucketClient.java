@@ -24,6 +24,13 @@ public final class BlackHoleBucketClient {
 			GLFW.GLFW_KEY_ENTER,
 			"key.categories.transmutationconvenient");
 
+	/** 空手按 G：切換 Curios 槽裡大天使的懲戒的模式。 */
+	public static final KeyMapping CURIO_MODE = new KeyMapping(
+			"key.transmutationconvenient.curio_mode",
+			InputConstants.Type.KEYSYM,
+			GLFW.GLFW_KEY_G,
+			"key.categories.transmutationconvenient");
+
 	private BlackHoleBucketClient() {
 	}
 
@@ -41,6 +48,16 @@ public final class BlackHoleBucketClient {
 				continue;
 			}
 			NetworkHandler.CHANNEL.sendToServer(new NetworkHandler.CycleModePacket());
+		}
+		while (CURIO_MODE.consumeClick()) {
+			if (minecraft.screen != null || minecraft.player == null) {
+				continue;
+			}
+			// 手上必須是空的；有物品時讓 ProjectE 原本的 G 鍵處理。
+			if (!minecraft.player.getMainHandItem().isEmpty()) {
+				continue;
+			}
+			NetworkHandler.CHANNEL.sendToServer(new NetworkHandler.CurioModePacket());
 		}
 	}
 }

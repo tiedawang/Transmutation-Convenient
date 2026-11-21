@@ -12,6 +12,7 @@ import moze_intel.projecte.api.nss.NSSItem;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -53,7 +54,30 @@ public class TransmutationConvenientMod {
 		event.enqueueWork(() -> {
 			NetworkHandler.register();
 			registerElytraEmc();
+			registerCuriosIfPresent();
 		});
+	}
+
+	/**
+	 * 有 Curios 時才載入 Curios 兼容類別。
+	 *
+	 * <p>用反射呼叫是刻意的：Curios 是選填依賴，若直接在這支類別留下
+	 * {@code CuriosCompat} 的型別參考，缺少 Curios 時可能在類別驗證階段就
+	 * 載入 Curios 的類別而失敗。只有在 {@code ModList} 確認 Curios 存在後
+	 * 才用 {@code Class.forName} 載入兼容類別。
+	 */
+	private static void registerCuriosIfPresent() {
+		if (!ModList.get().isLoaded("curios")) {
+			return;
+		}
+		try {
+			Class.forName("com.transmutationconvenient.compat.CuriosCompat")
+					.getMethod("register")
+					.invoke(null);
+			LOGGER.info("[便捷轉化] 已註冊 ProjectE 的 Curios 飾品兼容。");
+		} catch (ReflectiveOperationException | LinkageError error) {
+			LOGGER.warn("[便捷轉化] 無法註冊 ProjectE 的 Curios 飾品兼容。", error);
+		}
 	}
 
 	/**

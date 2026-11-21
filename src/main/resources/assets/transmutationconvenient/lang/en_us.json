@@ -19,5 +19,6 @@
 	"gui.transmutationconvenient.black_hole_bucket.fluid": "%1$s: %2$s Buckets",
 	"key.transmutationconvenient.cycle_mode": "Cycle Black Hole Bucket Mode",
 	"key.categories.transmutationconvenient": "Transmutation Convenient",
-	"itemGroup.transmutationconvenient": "Transmutation Convenient"
+	"itemGroup.transmutationconvenient": "Transmutation Convenient",
+	"key.transmutationconvenient.curio_mode": "Curio Mode"
 }

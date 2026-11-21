@@ -20,6 +20,7 @@ public final class BlackHoleBucketClientSetup {
 	@SubscribeEvent
 	public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
 		event.register(BlackHoleBucketClient.CYCLE_MODE);
+		event.register(BlackHoleBucketClient.CURIO_MODE);
 	}
 
 	@SubscribeEvent

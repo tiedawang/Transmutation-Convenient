@@ -4,6 +4,7 @@ import com.transmutationconvenient.TransmutationConvenientMod;
 import com.transmutationconvenient.bucket.BlackHoleBucketItem;
 import com.transmutationconvenient.bucket.BlackHoleBucketMenu;
 import com.transmutationconvenient.client.ClientPacketHandlers;
+import com.transmutationconvenient.compat.CurioActions;
 import com.transmutationconvenient.util.FillService;
 import com.transmutationconvenient.util.WorkbenchKind;
 import net.minecraft.network.FriendlyByteBuf;
@@ -31,6 +32,8 @@ import java.util.function.Supplier;
  *   <li>{@link FillRequestPacket}：用 EMC 幫我填好合成材料（原有功能）。</li>
  *   <li>{@link CycleModePacket}：切換手上黑洞之桶的模式。</li>
  *   <li>{@link ExtractFluidPacket}：游標拿著空桶時，從流體槽抽一桶出來。</li>
+ *   <li>{@link CurioUsePacket}：空手右鍵時，使用 Curios 槽裡的大天使的懲戒。</li>
+ *   <li>{@link CurioModePacket}：空手按 G 時，切換 Curios 槽裡的大天使的懲戒模式。</li>
  * </ul>
  *
  * <p>服務端 → 客戶端：
@@ -41,7 +44,7 @@ import java.util.function.Supplier;
  */
 public final class NetworkHandler {
 
-	private static final String PROTOCOL = "2";
+	private static final String PROTOCOL = "3";
 
 	public static SimpleChannel CHANNEL;
 
@@ -63,6 +66,10 @@ public final class NetworkHandler {
 		CHANNEL.registerMessage(4, ProjectESimplificationPacket.class,
 				ProjectESimplificationPacket::encode, ProjectESimplificationPacket::decode,
 				ProjectESimplificationPacket::handle);
+		CHANNEL.registerMessage(5, CurioUsePacket.class,
+				CurioUsePacket::encode, CurioUsePacket::decode, CurioUsePacket::handle);
+		CHANNEL.registerMessage(6, CurioModePacket.class,
+				CurioModePacket::encode, CurioModePacket::decode, CurioModePacket::handle);
 	}
 
 	/** 伺服器 → 客戶端：同步 ProjectE 精簡狀態，讓創造標籤重建。 */
@@ -127,6 +134,50 @@ public final class NetworkHandler {
 				}
 				BlackHoleBucketItem.setMode(stack, BlackHoleBucketItem.getMode(stack).next());
 				player.inventoryMenu.broadcastChanges();
+			});
+			context.setPacketHandled(true);
+		}
+	}
+
+	/** 客戶端 → 服務端：空手右鍵，使用 Curios 槽裡的大天使的懲戒。 */
+	public record CurioUsePacket() {
+
+		public void encode(FriendlyByteBuf buf) {
+		}
+
+		public static CurioUsePacket decode(FriendlyByteBuf buf) {
+			return new CurioUsePacket();
+		}
+
+		public void handle(Supplier<NetworkEvent.Context> ctx) {
+			NetworkEvent.Context context = ctx.get();
+			context.enqueueWork(() -> {
+				ServerPlayer player = context.getSender();
+				if (player != null) {
+					CurioActions.fireArchangel(player);
+				}
+			});
+			context.setPacketHandled(true);
+		}
+	}
+
+	/** 客戶端 → 服務端：空手按 G，切換 Curios 槽裡的大天使的懲戒模式。 */
+	public record CurioModePacket() {
+
+		public void encode(FriendlyByteBuf buf) {
+		}
+
+		public static CurioModePacket decode(FriendlyByteBuf buf) {
+			return new CurioModePacket();
+		}
+
+		public void handle(Supplier<NetworkEvent.Context> ctx) {
+			NetworkEvent.Context context = ctx.get();
+			context.enqueueWork(() -> {
+				ServerPlayer player = context.getSender();
+				if (player != null) {
+					CurioActions.toggleArchangel(player);
+				}
 			});
 			context.setPacketHandled(true);
 		}

@@ -1,9 +1,12 @@
 package com.transmutationconvenient.client;
 
 import com.transmutationconvenient.TransmutationConvenientMod;
+import com.transmutationconvenient.network.NetworkHandler;
 import com.transmutationconvenient.projecte.ProjectESimplificationClientState;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -18,5 +21,18 @@ public final class ClientEvents {
 	@SubscribeEvent
 	public static void onLogout(ClientPlayerNetworkEvent.LoggingOut event) {
 		ProjectESimplificationClientState.setEnabled(false);
+	}
+
+	/** 空手對空氣右鍵：請服務端用 Curios 槽裡的大天使的懲戒發射一支箭。 */
+	@SubscribeEvent
+	public static void onRightClickEmpty(PlayerInteractEvent.RightClickEmpty event) {
+		Minecraft minecraft = Minecraft.getInstance();
+		if (minecraft.player == null || event.getEntity() != minecraft.player) {
+			return;
+		}
+		if (!minecraft.player.getMainHandItem().isEmpty()) {
+			return;
+		}
+		NetworkHandler.CHANNEL.sendToServer(new NetworkHandler.CurioUsePacket());
 	}
 }
