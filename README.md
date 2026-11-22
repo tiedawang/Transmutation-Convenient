@@ -1,3 +1,5 @@
+[Introduction in English version](assets/README(English).md)
+
 # Transmutation Convenient - 便捷转化
 
 ## 本Mod為《ProjectE》的附屬Mod，致力於提高其與其他Mod的可交互性、降低繁複操作
