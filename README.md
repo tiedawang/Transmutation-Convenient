@@ -1,4 +1,4 @@
-[Introduction in English version](assets/README(English).md)
+[Introduction in English version](./README(English).md)
 
 # Transmutation Convenient - 便捷转化
 
