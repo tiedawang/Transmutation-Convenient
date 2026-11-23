@@ -14,6 +14,7 @@
 - Re:Avaritia
 - Colytra
 - Ice and Fire: Community Edition
+- Curios API
 
 ---
 

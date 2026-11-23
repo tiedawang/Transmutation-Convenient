@@ -14,6 +14,7 @@
 - 《Re:Avaritia》
 - 《Colytra》
 - 《Ice And Fire Community Edition》
+- 《Curios API》
 
 ---
 
