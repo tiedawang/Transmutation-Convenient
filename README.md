@@ -52,7 +52,14 @@
 
 - 使得《ProjectE》中的 `禁止火把` 被註冊為《Curios API》中的 `護符`；使其被安放在《Curios API》中的 `護膚` 欄位時，能夠觸發被放置為方塊時除照明外的應有功能。
 
-- 可以使用《ProjectE》中的 `賢者之石` 與《Ice And Fire Community Edition》中的 `銀錠` 合成來自《Minecraft》原版的 `鐵錠` & 可以使用《ProjectE》中的 `賢者之石` 與使用一定數量的來自《Minecraft》原版的 `銅錠` 合成來自《Minecraft》原版的 `鐵錠` & 可以使用《ProjectE》中的 `賢者之石` 與一定數量的《Ice And Fire Community Edition》中的 `銀錠` 合成來自《Minecraft》原版的的 `金錠` ；**這些配方擁有逆向版本，且不消耗 `賢者之石` 。**
+- 使玩家可以使用《ProjectE》中的 `賢者之石` 與部分物品合成：
+    >與《Ice And Fire Community Edition》中的 `銀錠` 合成，將會得到來自《Minecraft》原版的 `鐵錠` 
+
+    >與一定數量的來自《Minecraft》原版的 `銅錠` 合成，將會得到來自《Minecraft》原版的 `鐵錠` 
+
+    >與一定數量的《Ice And Fire Community Edition》中的 `銀錠` 合成，將會得到來自《Minecraft》原版的 `金錠` 
+
+**這些配方擁有逆向版本，且不消耗 `賢者之石` 。**
 
 ### 已發現並修復的問題:
 
