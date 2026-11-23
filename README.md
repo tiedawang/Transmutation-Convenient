@@ -1,4 +1,4 @@
-[Introduction in English version](./README(English).md)
+[Introduction in English version(The English version of the documentation applies only to version 0.5.2)](./README(English).md)
 
 # Transmutation Convenient - 便捷转化
 
@@ -50,6 +50,8 @@
 - 使當玩家騎乘《IceAndFire Community Edition》中的 `龍` 時，在從 `龍` 身上脫離時，將獲得一次免疫摔落傷害的效果，並在觸發之後清除。
 
 - 使得《ProjectE》中的 `禁止火把` 被註冊為《Curios API》中的 `護符`；使其被安放在《Curios API》中的 `護膚` 欄位時，能夠觸發被放置為方塊時除照明外的應有功能。
+
+- 可以使用《ProjectE》中的 `賢者之石` 與《Ice And Fire Community Edition》中的 `銀錠` 合成來自《Minecraft》原版的 `鐵錠` & 可以使用《ProjectE》中的 `賢者之石` 與使用一定數量的來自《Minecraft》原版的 `銅錠` 合成來自《Minecraft》原版的 `鐵錠` & 可以使用《ProjectE》中的 `賢者之石` 與一定數量的《Ice And Fire Community Edition》中的 `銀錠` 合成來自《Minecraft》原版的的 `金錠` ；**這些配方擁有逆向版本，且不消耗 `賢者之石` 。**
 
 ### 已發現並修復的問題:
 

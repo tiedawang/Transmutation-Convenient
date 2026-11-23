@@ -1,0 +1,32 @@
+{
+	"type": "forge:conditional",
+	"recipes": [
+		{
+			"conditions": [
+				{
+					"type": "forge:mod_loaded",
+					"modid": "iceandfire"
+				}
+			],
+			"recipe": {
+				"type": "minecraft:crafting_shapeless",
+				"category": "misc",
+				"ingredients": [
+					{
+						"item": "projecte:philosophers_stone"
+					},
+					{
+						"item": "minecraft:gold_ingot"
+					},
+					{
+						"item": "minecraft:gold_ingot"
+					}
+				],
+				"result": {
+					"count": 8,
+					"item": "iceandfire:silver_ingot"
+				}
+			}
+		}
+	]
+}

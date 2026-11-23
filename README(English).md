@@ -1,3 +1,5 @@
+(This document only applies to version 0.5.2)
+
 # Transmutation Convenient
 
 ## This mod is an add-on for ProjectE, dedicated to improving its interoperability with other mods and reducing cumbersome operations.
