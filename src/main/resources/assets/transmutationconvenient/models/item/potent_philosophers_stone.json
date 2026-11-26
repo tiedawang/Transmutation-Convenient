@@ -1,0 +1,6 @@
+{
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "transmutationconvenient:item/potent_philosophers_stone"
+	}
+}

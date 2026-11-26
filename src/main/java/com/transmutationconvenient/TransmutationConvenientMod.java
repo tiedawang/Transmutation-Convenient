@@ -5,6 +5,7 @@ import com.transmutationconvenient.registry.ModBlockEntities;
 import com.transmutationconvenient.registry.ModBlocks;
 import com.transmutationconvenient.registry.ModItems;
 import com.transmutationconvenient.registry.ModMenus;
+import com.transmutationconvenient.registry.ModRecipes;
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.imc.CustomEMCRegistration;
 import moze_intel.projecte.api.imc.IMCMethods;
@@ -45,6 +46,7 @@ public class TransmutationConvenientMod {
 		ModBlockEntities.register(modEventBus);
 		ModItems.register(modEventBus);
 		ModMenus.register(modEventBus);
+		ModRecipes.register(modEventBus);
 
 		modEventBus.addListener(this::commonSetup);
 		LOGGER.info("[便捷轉化] 正在初始化……");

@@ -12,6 +12,7 @@
 	"block.transmutationconvenient.emc_pipe": "EMC Pipe",
 	"block.transmutationconvenient.auto_vending_machine": "Auto Vending Machine",
 	"item.transmutationconvenient.black_hole_bucket": "Black Hole Bucket",
+	"item.transmutationconvenient.potent_philosophers_stone": "Potent Philosopher's Stone",
 	"item.transmutationconvenient.black_hole_bucket.mode.items": "Item Attraction Mode",
 	"item.transmutationconvenient.black_hole_bucket.mode.fluids": "Fluid Attraction Mode",
 	"item.transmutationconvenient.black_hole_bucket.mode.uncontrolled": "Uncontrolled Attraction Mode",

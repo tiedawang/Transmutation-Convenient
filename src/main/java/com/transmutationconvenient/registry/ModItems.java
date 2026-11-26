@@ -2,12 +2,14 @@ package com.transmutationconvenient.registry;
 
 import com.transmutationconvenient.TransmutationConvenientMod;
 import com.transmutationconvenient.bucket.BlackHoleBucketItem;
+import com.transmutationconvenient.item.PotentPhilosophersStoneItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -33,7 +35,12 @@ public final class ModItems {
 			ITEMS.register("black_hole_bucket",
 					() -> new BlackHoleBucketItem(new Item.Properties().stacksTo(1)));
 
-	/** 本模組專屬創造模式物品欄「便捷轉化」—— EMC 管道、自動販賣機、黑洞之桶。 */
+	public static final RegistryObject<Item> POTENT_PHILOSOPHERS_STONE =
+			ITEMS.register("potent_philosophers_stone",
+					() -> new PotentPhilosophersStoneItem(
+							new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
+
+	/** 本模組專屬創造模式物品欄「便捷轉化」—— EMC 管道、自動販賣機、黑洞之桶、烈性賢者之石。 */
 	public static final RegistryObject<CreativeModeTab> TAB = TABS.register(
 			"transmutationconvenient",
 			() -> CreativeModeTab.builder()
@@ -43,6 +50,7 @@ public final class ModItems {
 						output.accept(EMC_PIPE.get());
 						output.accept(AUTO_VENDING_MACHINE.get());
 						output.accept(BLACK_HOLE_BUCKET.get());
+						output.accept(POTENT_PHILOSOPHERS_STONE.get());
 					})
 					.build());
 

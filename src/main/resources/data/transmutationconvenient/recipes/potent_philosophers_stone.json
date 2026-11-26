@@ -1,0 +1,18 @@
+{
+	"type": "transmutationconvenient:consuming_shapeless",
+	"category": "misc",
+	"ingredients": [
+		{
+			"item": "projecte:philosophers_stone"
+		},
+		{
+			"item": "minecraft:blaze_powder"
+		},
+		{
+			"item": "minecraft:blaze_powder"
+		}
+	],
+	"result": {
+		"item": "transmutationconvenient:potent_philosophers_stone"
+	}
+}

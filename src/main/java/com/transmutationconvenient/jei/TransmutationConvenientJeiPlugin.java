@@ -30,4 +30,5 @@ public class TransmutationConvenientJeiPlugin implements IModPlugin {
 	public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
 		HELPER = registration.getTransferHelper();
 	}
+
 }

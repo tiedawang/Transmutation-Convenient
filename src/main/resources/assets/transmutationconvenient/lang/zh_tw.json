@@ -12,6 +12,7 @@
 	"block.transmutationconvenient.emc_pipe": "EMC管道",
 	"block.transmutationconvenient.auto_vending_machine": "自動販賣機",
 	"item.transmutationconvenient.black_hole_bucket": "黑洞之桶",
+	"item.transmutationconvenient.potent_philosophers_stone": "烈性賢者之石",
 	"item.transmutationconvenient.black_hole_bucket.mode.items": "吸引物品模式",
 	"item.transmutationconvenient.black_hole_bucket.mode.fluids": "吸引液體模式",
 	"item.transmutationconvenient.black_hole_bucket.mode.uncontrolled": "不可控吸引模式",
