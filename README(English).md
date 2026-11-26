@@ -1,4 +1,6 @@
-(This document only applies to version 0.5.2)
+[中文版介紹文檔(中文版的介紹文檔只適用於本項目的 0.7.3版本)](./README.md)
+
+(This document applies to version 0.7.3)
 
 # Transmutation Convenient
 
@@ -52,11 +54,24 @@
 
 - Registered ProjectE's `Interdiction Torch` as a `charm` in the Curios API, so that when placed in the Curios API's `charm` slot, it can trigger all the functions it has when placed as a block, except for lighting.
 
+- Allows players to combine ProjectE's `Philosopher's Stone` with certain items:
+    > Combining it with `Silver Ingots` from Ice and Fire: Community Edition produces vanilla Minecraft `Iron Ingots`.
+
+    > Combining it with a certain amount of vanilla Minecraft `Copper Ingots` produces vanilla Minecraft `Iron Ingots`.
+
+    > Combining it with a certain amount of `Silver Ingots` from Ice and Fire: Community Edition produces vanilla Minecraft `Gold Ingots`.
+
+**These recipes also have reverse versions and do not consume the `Philosopher's Stone`.**
+
+- Added the `Potent Philosopher's Stone`. Combining it with an item yields that item's smelting result without consuming the `Potent Philosopher's Stone`; it also functions as flint and steel.
+
 ### Issues found and fixed:
 
 - Fixed an issue in the Re:Avaritia integration where items crafted with the `Extreme Smithing Table` received automatically assigned EMC values far lower than the total EMC value of their ingredients.
 
 - Fixed an issue where the behavior of `/sePE true` and `/tcPE false` modifying items and crafting recipes did not cause their EMC values to change.
+
+- Fixed the issues where `players could sometimes drag items into the Black Hole Bucket with the mouse, but sometimes could not` and `right-clicking an item in the Black Hole Bucket would take out only one item instead of 50%`.
 
 ---
 

@@ -26,11 +26,13 @@ import java.util.List;
  * <p>版面：左邊是流體側邊欄（寬 44），右邊是原版大箱子（176×222）的物品區；
  * 整體寬 220、高 222。物品區的 54 格排法與原版大箱子完全相同，玩家背包與快捷欄座標也照原版。
  *
- * <p>點擊規則不是原版槽位規則，全部由 {@link #clicked} 自己處理：
+ * <p>點擊規則由 {@link #clicked} 處理；可堆疊總量是 long，不能直接交給原版槽位，
+ * 但取出／放置／拖曳的互動語意盡量與原版箱子一致：
  * <ul>
  *   <li>左鍵點空格：取出一組（最多該物品的原版堆疊上限）。</li>
- *   <li>右鍵點空格：取出 1 個。</li>
- *   <li>手上有同種物品（或格位是空的）：整疊塞進桶裡。</li>
+ *   <li>右鍵點空格：取出實際存量的一半（向上取整，受原版堆疊上限裁切）。</li>
+ *   <li>手上有同種物品：左鍵整疊塞進桶裡，右鍵只放 1 個。</li>
+ *   <li>滑鼠拖曳（QUICK_CRAFT）：交給原版 {@link AbstractContainerMenu} 分配。</li>
  *   <li>Shift 點桶內格：一組一組搬進背包；Shift 點背包格：整疊塞進桶裡。</li>
  *   <li>數字鍵（SWAP）：把桶內一組換到該快捷欄格；Q（THROW）：丟出一組。</li>
  * </ul>
@@ -140,10 +142,10 @@ public class BlackHoleBucketMenu extends AbstractContainerMenu {
 		switch (type) {
 			case PICKUP, PICKUP_ALL -> handlePickup(slotId, button);
 			case QUICK_MOVE -> moveBucketToPlayer(slotId);
+			case QUICK_CRAFT -> super.clicked(slotId, button, type, clicker);
 			case SWAP -> swapWithHotbar(slotId, button, clicker);
 			case THROW -> throwGroup(slotId, button, clicker);
 			default -> {
-				// QUICK_CRAFT 等拖曳操作在桶內格不支援
 			}
 		}
 	}
@@ -151,7 +153,16 @@ public class BlackHoleBucketMenu extends AbstractContainerMenu {
 	private void handlePickup(int slotId, int button) {
 		ItemStack carried = getCarried();
 		if (carried.isEmpty()) {
-			int amount = button == 1 ? 1 : 64;
+			// 與原版箱子一致：左鍵取整個顯示堆疊，右鍵取一半（向上取整）。
+			// 這裡的「一半」以實際存量計算，最後仍受該物品的原版堆疊上限裁切。
+			long total = this.storage.getCount(slotId);
+			if (total <= 0L) {
+				return;
+			}
+			int perStack = Math.max(1, this.storage.getTemplate(slotId).getMaxStackSize());
+			int amount = button == 1
+					? (int) Math.min(perStack, (total + 1L) / 2L)
+					: (int) Math.min(perStack, total);
 			ItemStack taken = this.storage.extractItem(slotId, amount);
 			if (!taken.isEmpty()) {
 				setCarried(taken);
@@ -159,9 +170,15 @@ public class BlackHoleBucketMenu extends AbstractContainerMenu {
 			}
 			return;
 		}
-		ItemStack remainder = this.storage.insertItemInto(slotId, carried);
-		if (remainder.getCount() != carried.getCount()) {
-			setCarried(remainder);
+
+		// 與原版箱子一致：左鍵放入整疊，右鍵只放一個。
+		int amount = button == 1 ? 1 : carried.getCount();
+		ItemStack toInsert = carried.copyWithCount(amount);
+		ItemStack remainder = this.storage.insertItemInto(slotId, toInsert);
+		int inserted = amount - remainder.getCount();
+		if (inserted > 0) {
+			carried.shrink(inserted);
+			setCarried(carried.isEmpty() ? ItemStack.EMPTY : carried);
 			persist();
 		}
 	}
@@ -373,7 +390,21 @@ public class BlackHoleBucketMenu extends AbstractContainerMenu {
 		public void setItem(int slot, ItemStack stack) {
 			if (stack.isEmpty()) {
 				storage.clearSlot(slot);
+				persist();
+				return;
+			}
+			long existing = storage.getCount(slot);
+			if (existing > 0L && ItemStack.isSameItemSameTags(storage.getTemplate(slot), stack)) {
+				// 原版 QUICK_CRAFT 分配時，會把槽位目前顯示的 1 個也算進新堆疊數量。
+				// 那個 1 只是顯示佔位，不能真的再加一次；只把超出佔位的部分併進總量，
+				// 例如桶內 32、拖入 32 時，原版送來 33，這裡只加 32，結果仍是 64。
+				int delta = stack.getCount() - 1;
+				if (delta > 0) {
+					storage.insertItemInto(slot, stack.copyWithCount(delta));
+				}
 			} else {
+				// 空槽或換物品：以這次送來的堆疊重建這一格。
+				storage.clearSlot(slot);
 				storage.insertItemInto(slot, stack);
 			}
 			persist();

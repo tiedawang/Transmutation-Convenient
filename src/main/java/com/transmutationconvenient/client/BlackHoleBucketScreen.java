@@ -22,7 +22,7 @@ import java.util.List;
  * 黑洞之桶的儲存空間介面。
  *
  * <p>版面：左邊是流體側邊欄（流體槽的數量＝目前存了幾種流體，槽平分側邊欄高度、槽與槽之間留 2 像素），
- * 右邊是原版大箱子的 54 格物品區。物品格的實際總量由 {@link #renderLabels} 自己畫在原本顯示數量的位置。
+ * 右邊是原版大箱子的 54 格物品區。物品格的實際總量由 {@link #renderStoredCounts} 自己畫在原本顯示數量的位置。
  *
  * <p>流體槽的填滿程度＝該流體存量 ÷ 每種流體各自的 1000 桶上限；用該流體的靜止貼圖從槽底往上覆蓋。
  * 滑鼠停在流體槽上會顯示「流體名稱：X 桶」；游標拿著空桶時點流體槽會抽出一桶。
@@ -82,9 +82,15 @@ public class BlackHoleBucketScreen extends AbstractContainerScreen<BlackHoleBuck
 		drawFluidSlots(guiGraphics, x, y);
 	}
 
-	@Override
-	protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-		super.renderLabels(guiGraphics, mouseX, mouseY);
+	/**
+	 * 由 {@code ContainerScreenEvent.Render.Foreground} 在物品格與文字之後、游標物品之前呼叫。
+	 * 這樣總量數字會蓋在物品圖示上，而不是被物品圖示蓋住；同時仍維持在原版數量位置。
+	 */
+	public void renderStoredCounts(GuiGraphics guiGraphics) {
+		// 原版物品圖示畫在 z=100、原版堆疊數字畫在 z=200；
+		// 這裡必須跟著原版數字一起放到 z=200，否則深度測試會讓文字被物品圖示蓋住。
+		guiGraphics.pose().pushPose();
+		guiGraphics.pose().translate(0.0F, 0.0F, 200.0F);
 		for (int i = 0; i < BlackHoleBucketMenu.BUCKET_SLOTS; i++) {
 			long count = this.menu.getStoredCount(i);
 			if (count <= 1L) {
@@ -95,6 +101,7 @@ public class BlackHoleBucketScreen extends AbstractContainerScreen<BlackHoleBuck
 			guiGraphics.drawString(this.font, text,
 					slot.x + 19 - 2 - this.font.width(text), slot.y + 9, 0xFFFFFF, true);
 		}
+		guiGraphics.pose().popPose();
 	}
 
 	// ------------------------------------------------------------ 側邊欄

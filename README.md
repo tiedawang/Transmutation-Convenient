@@ -1,4 +1,6 @@
-[Introduction in English version(The English version of the documentation applies only to version 0.5.2)](./README(English).md)
+[Introduction in English version(The English version of the documentation applies only to version 0.7.3)](./README(English).md)
+
+(本文檔目前僅適用本項目的 0.7.3 版本)
 
 # Transmutation Convenient - 便捷转化
 
@@ -68,6 +70,8 @@
 - 修復為《Re:Avaritia》添加的為 `終焉鍛造台` 合成出的物品，被自動添加 EMC 值遠遠小於合成材料的 EMC 值總和的問題
 
 - 修復指令 `/sePE true` &  `/tcPE false` 修改物品和合成配方的行為，不會導致其 EMC 值變化的問題
+
+- 修復`玩家有時可以利用鼠標拖動往 黑洞之桶 內放入物品，有時則不能` & `使用鼠標右鍵選取 黑洞之桶 中的物品時，會取出一個，而不是 50%` 的問題。
 
 ---
 
