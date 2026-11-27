@@ -1,4 +1,4 @@
-[中文版介紹文檔(中文版的介紹文檔只適用於本項目的 0.7.3版本)](./README.md)
+[中文版介紹文檔(中文版的介紹文檔只適用於本項目的 0.9.4版本)](./README.md)
 
 (This document applies to version 0.7.3)
 
