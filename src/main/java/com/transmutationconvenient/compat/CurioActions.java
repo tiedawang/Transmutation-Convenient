@@ -31,7 +31,7 @@ public final class CurioActions {
 		invoke("toggleArchangel", ServerPlayer.class, player);
 	}
 
-	/** 玩家身上是否戴著 1.7.石（Curios 吊墜或護符）。 */
+	/** 玩家身上是否戴著 連擊石（Curios 吊墜或護符）。 */
 	public static boolean hasOneSevenStone(Player player) {
 		Object result = invoke("hasOneSevenStone", Player.class, player);
 		return result instanceof Boolean value && value;

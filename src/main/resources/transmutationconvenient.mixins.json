@@ -14,6 +14,7 @@
 	],
 	"client": [
 		"RecipeTransferServiceMixin",
+		"MinecraftAttackInvoker",
 		"StunMouseMixin"
 	],
 	"injectors": {

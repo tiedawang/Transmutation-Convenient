@@ -40,7 +40,7 @@ import java.util.function.Supplier;
  * <ul>
  *   <li>{@link BucketDataPacket}：同步黑洞之桶每一格的實際總量與流體清單。</li>
  *   <li>{@link ProjectESimplificationPacket}：同步 ProjectE 精簡狀態，重建創造標籤。</li>
- *   <li>{@link StunPacket}：1.7.石命中玩家時，讓客戶端鎖住移動與視角 0.2 秒。</li>
+ *   <li>{@link StunPacket}：連擊石命中玩家時，讓客戶端鎖住移動與視角 0.2 秒。</li>
  * </ul>
  */
 public final class NetworkHandler {
@@ -249,7 +249,7 @@ public final class NetworkHandler {
 		}
 	}
 
-	/** 伺服器 → 客戶端：1.7.石命中玩家，鎖住移動與視角 ticks 刻。 */
+	/** 伺服器 → 客戶端：連擊石命中玩家，鎖住移動與視角 ticks 刻。 */
 	public record StunPacket(int ticks, float yaw, float pitch) {
 
 		public void encode(FriendlyByteBuf buf) {

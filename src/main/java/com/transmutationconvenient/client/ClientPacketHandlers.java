@@ -20,7 +20,7 @@ public final class ClientPacketHandlers {
 		}
 	}
 
-	/** 1.7.石命中玩家：開始客戶端僵直鎖定。 */
+	/** 連擊石命中玩家：開始客戶端僵直鎖定。 */
 	public static void applyStun(int ticks, float yaw, float pitch) {
 		StunClientState.begin(ticks, yaw, pitch);
 	}

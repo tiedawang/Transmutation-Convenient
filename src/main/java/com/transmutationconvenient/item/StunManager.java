@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * 1.7.石的「僵直」狀態。
+ * 連擊石的「僵直」狀態。
  *
  * <p>這不是藥水效果，而是一份只有伺服器端使用的短時間狀態表：
  * 每次攻擊把目標的 UUID 對應到「結束的遊戲刻」與當下的視角；4 刻（0.2 秒）內：
@@ -68,6 +68,9 @@ public final class StunManager {
 			return false;
 		}
 		entity.setDeltaMovement(Vec3.ZERO);
+		// 僵直取消目標 tick 時，原版不會再遞減受擊無敵時間；這裡直接歸零，
+		// 讓遠古版本的詛咒（移除受擊冷卻）在僵直期間仍然成立。
+		entity.invulnerableTime = 0;
 		entity.setYRot(data.yaw);
 		entity.setXRot(data.pitch);
 		entity.setYHeadRot(data.yaw);

@@ -17,21 +17,23 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.PotionColorCalculationEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 /**
- * 1.7.石的兩個效果：
+ * 連擊石的兩個效果：
  *
  * <ul>
  *   <li>佩戴在 Curios 的吊墜／護符、放在快捷欄，或拿在主副手時，玩家攻擊會給目標
  *       3 秒的「遠古版本的詛咒」；</li>
  *   <li>攻擊命中的目標會額外僵直 0.2 秒：不能移動、攻擊或轉動視角；
  *       僵直不是藥水效果，而是由 {@link StunManager} 的短時間狀態表控制；</li>
- *   <li>職業等級為大師的村民死亡時，固定掉落一個 1.7.石，不受掠奪附魔影響。</li>
+ *   <li>職業等級為大師的村民死亡時，固定掉落一個 連擊石，不受掠奪附魔影響。</li>
  * </ul>
  */
 @Mod.EventBusSubscriber(modid = TransmutationConvenientMod.MOD_ID,
@@ -51,12 +53,29 @@ public final class OneSevenStoneEvents {
 		if (player.level().isClientSide()) {
 			return;
 		}
-		// 被 1.7.石僵直的玩家不能攻擊；這裡是伺服器端的權威判斷。
+		// 被 連擊石僵直的玩家不能攻擊；這裡是伺服器端的權威判斷。
 		if (StunManager.isStunned(player)) {
 			event.setCanceled(true);
+		}
+	}
+
+	/**
+	 * 只有實際造成傷害時才上詛咒與僵直。
+	 *
+	 * <p>不能掛在 {@code AttackEntityEvent}：那個事件在「揮空但碰撞箱有對到」時也會發，
+	 * 而目標被僵直時整個 tick 被取消、{@code invulnerableTime} 不會下降，會形成
+	 * 「每點一下都刷新僵直，目標永遠無敵」的迴圈。{@code LivingHurtEvent} 已經過
+	 * 無敵時間與傷害結算，只有在真的會受傷時才觸發。
+	 */
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public static void onLivingHurt(LivingHurtEvent event) {
+		LivingEntity target = event.getEntity();
+		if (target.level().isClientSide() || event.isCanceled() || !target.isAlive()) {
 			return;
 		}
-		if (!(event.getTarget() instanceof LivingEntity target) || !target.isAlive()) {
+		Entity source = event.getSource().getEntity();
+		// 只認玩家近戰：投射物的直接來源不是玩家，維持原本的近戰觸發範圍。
+		if (!(source instanceof Player player) || event.getSource().getDirectEntity() != player) {
 			return;
 		}
 		if (!isActive(player)) {
@@ -133,7 +152,7 @@ public final class OneSevenStoneEvents {
 	}
 
 	/**
-	 * 判斷玩家是否帶著 1.7.石：主手、副手、快捷欄 0～8，或 Curios 的吊墜／護符。
+	 * 判斷玩家是否帶著 連擊石：主手、副手、快捷欄 0～8，或 Curios 的吊墜／護符。
 	 *
 	 * <p>Curios 是選填依賴，查詢包在 {@link CurioActions} 的反射入口裡；
 	 * 沒裝 Curios 時只檢查背包與手部。
@@ -142,7 +161,7 @@ public final class OneSevenStoneEvents {
 		return source instanceof LivingEntity living && StunManager.isStunned(living);
 	}
 
-	private static boolean isActive(Player player) {
+	public static boolean isActive(Player player) {
 		Item stone = ModItems.ONE_SEVEN_STONE.get();
 		if (player.getMainHandItem().is(stone) || player.getOffhandItem().is(stone)) {
 			return true;

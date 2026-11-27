@@ -79,7 +79,7 @@ public class TransmutationConvenientMod {
 			Class.forName("com.transmutationconvenient.compat.CuriosCompat")
 					.getMethod("register")
 					.invoke(null);
-			LOGGER.info("[便捷轉化] 已註冊 Curios 飾品兼容（ProjectE 飾品與 1.7.石）。");
+			LOGGER.info("[便捷轉化] 已註冊 Curios 飾品兼容（ProjectE 飾品與 連擊石）。");
 		} catch (ReflectiveOperationException | LinkageError error) {
 			LOGGER.warn("[便捷轉化] 無法註冊 Curios 飾品兼容。", error);
 		}
@@ -103,7 +103,7 @@ public class TransmutationConvenientMod {
 				() -> new CustomEMCRegistration(NSSItem.createItem(Items.ELYTRA), ELYTRA_EMC));
 	}
 
-	/** 1.7.石沒有合成配方；EMC 直接以使用者指定的 16000 註冊。 */
+	/** 連擊石沒有合成配方；EMC 直接以使用者指定的 16000 註冊。 */
 	private static void registerOneSevenStoneEmc() {
 		InterModComms.sendTo(
 				ProjectEAPI.PROJECTE_MODID,

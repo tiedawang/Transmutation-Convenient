@@ -40,12 +40,12 @@ public final class ModItems {
 					() -> new PotentPhilosophersStoneItem(
 							new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
 
-	/** 1.7.石：Curios 吊墜／護符，或放在手部／快捷欄時讓攻擊附加遠古詛咒。 */
+	/** 連擊石：Curios 吊墜／護符，或放在手部／快捷欄時讓攻擊附加遠古詛咒。 */
 	public static final RegistryObject<Item> ONE_SEVEN_STONE =
 			ITEMS.register("one_seven_stone",
 					() -> new Item(new Item.Properties().stacksTo(1)));
 
-	/** 本模組專屬創造模式物品欄「便捷轉化」—— EMC 管道、自動販賣機、黑洞之桶、烈性賢者之石、1.7.石。 */
+	/** 本模組專屬創造模式物品欄「便捷轉化」—— EMC 管道、自動販賣機、黑洞之桶、烈性賢者之石、連擊石。 */
 	public static final RegistryObject<CreativeModeTab> TAB = TABS.register(
 			"transmutationconvenient",
 			() -> CreativeModeTab.builder()
