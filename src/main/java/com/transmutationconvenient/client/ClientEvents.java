@@ -22,6 +22,7 @@ public final class ClientEvents {
 	@SubscribeEvent
 	public static void onLogout(ClientPlayerNetworkEvent.LoggingOut event) {
 		ProjectESimplificationClientState.setEnabled(false);
+		StunClientState.clear();
 	}
 
 	/** 黑洞之桶的總量數字要畫在物品格之後，才不會被物品圖示遮住。 */

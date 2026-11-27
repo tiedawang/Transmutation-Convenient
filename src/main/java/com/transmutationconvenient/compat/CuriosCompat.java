@@ -1,6 +1,7 @@
 package com.transmutationconvenient.compat;
 
 import com.transmutationconvenient.mixin.ArchangelSmiteInvoker;
+import com.transmutationconvenient.registry.ModItems;
 import moze_intel.projecte.gameObjs.items.rings.ArchangelSmite;
 import moze_intel.projecte.gameObjs.items.rings.HarvestGoddess;
 import moze_intel.projecte.gameObjs.registries.PEBlocks;
@@ -19,7 +20,8 @@ import top.theillusivec4.curios.api.SlotResult;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
 /**
- * Curios 兼容：把 ProjectE 的豐收女神戒指、禁止火把與大天使的懲戒變成可佩戴的飾品。
+ * Curios 兼容：把 ProjectE 的豐收女神戒指、禁止火把與大天使的懲戒變成可佩戴的飾品，
+ * 並把本模組的 1.7.石註冊成吊墜／護符。
  *
  * <p>這個類別只在 Curios 已載入時由 {@code TransmutationConvenientMod} 呼叫，
  * 所以 Curios 缺席時不會載入任何 Curios 類別。
@@ -32,11 +34,20 @@ public final class CuriosCompat {
 	private CuriosCompat() {
 	}
 
-	/** 註冊三個 ProjectE 物品的 Curio 能力；對應的物品標籤另外放在 data/curios/tags/items。 */
+	/** 註冊三個 ProjectE 物品與 1.7.石的 Curio 能力；對應的物品標籤另外放在 data/curios/tags/items。 */
 	public static void register() {
 		CuriosApi.registerCurio(PEItems.HARVEST_GODDESS_BAND.get(), new HarvestGoddessCurio());
 		CuriosApi.registerCurio(PEBlocks.INTERDICTION_TORCH.asItem(), new InterdictionTorchCurio());
 		CuriosApi.registerCurio(PEItems.ARCHANGEL_SMITE.get(), new ArchangelSmiteCurio());
+		CuriosApi.registerCurio(ModItems.ONE_SEVEN_STONE.get(), new OneSevenStoneCurio());
+	}
+
+	/** 玩家身上是否戴著 1.7.石；客戶端與伺服器都可以查。 */
+	public static boolean hasOneSevenStone(Player player) {
+		return CuriosApi.getCuriosInventory(player)
+				.resolve()
+				.flatMap(handler -> handler.findFirstCurio(ModItems.ONE_SEVEN_STONE.get()))
+				.isPresent();
 	}
 
 	/** 玩家身上是否戴著大天使的懲戒；客戶端與伺服器都可以查。 */
@@ -175,6 +186,18 @@ public final class CuriosCompat {
 			if (stack.getItem() instanceof ArchangelSmite smite) {
 				smite.inventoryTick(stack, player.level(), player, 0, false);
 			}
+		}
+	}
+
+	/**
+	 * 1.7.石：物品本身不需要 curio tick；效果由攻擊事件查詢佩戴狀態。
+	 * 這裡只需要讓 Curios 接受它作為飾品。
+	 */
+	private static final class OneSevenStoneCurio implements ICurioItem {
+
+		@Override
+		public boolean hasCurioCapability(ItemStack stack) {
+			return true;
 		}
 	}
 }

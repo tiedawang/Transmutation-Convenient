@@ -3,6 +3,7 @@ package com.transmutationconvenient;
 import com.transmutationconvenient.network.NetworkHandler;
 import com.transmutationconvenient.registry.ModBlockEntities;
 import com.transmutationconvenient.registry.ModBlocks;
+import com.transmutationconvenient.registry.ModEffects;
 import com.transmutationconvenient.registry.ModItems;
 import com.transmutationconvenient.registry.ModMenus;
 import com.transmutationconvenient.registry.ModRecipes;
@@ -45,6 +46,7 @@ public class TransmutationConvenientMod {
 		ModBlocks.register(modEventBus);
 		ModBlockEntities.register(modEventBus);
 		ModItems.register(modEventBus);
+		ModEffects.register(modEventBus);
 		ModMenus.register(modEventBus);
 		ModRecipes.register(modEventBus);
 
@@ -56,6 +58,7 @@ public class TransmutationConvenientMod {
 		event.enqueueWork(() -> {
 			NetworkHandler.register();
 			registerElytraEmc();
+			registerOneSevenStoneEmc();
 			registerCuriosIfPresent();
 		});
 	}
@@ -76,9 +79,9 @@ public class TransmutationConvenientMod {
 			Class.forName("com.transmutationconvenient.compat.CuriosCompat")
 					.getMethod("register")
 					.invoke(null);
-			LOGGER.info("[便捷轉化] 已註冊 ProjectE 的 Curios 飾品兼容。");
+			LOGGER.info("[便捷轉化] 已註冊 Curios 飾品兼容（ProjectE 飾品與 1.7.石）。");
 		} catch (ReflectiveOperationException | LinkageError error) {
-			LOGGER.warn("[便捷轉化] 無法註冊 ProjectE 的 Curios 飾品兼容。", error);
+			LOGGER.warn("[便捷轉化] 無法註冊 Curios 飾品兼容。", error);
 		}
 	}
 
@@ -98,6 +101,15 @@ public class TransmutationConvenientMod {
 				ProjectEAPI.PROJECTE_MODID,
 				IMCMethods.REGISTER_CUSTOM_EMC,
 				() -> new CustomEMCRegistration(NSSItem.createItem(Items.ELYTRA), ELYTRA_EMC));
+	}
+
+	/** 1.7.石沒有合成配方；EMC 直接以使用者指定的 16000 註冊。 */
+	private static void registerOneSevenStoneEmc() {
+		InterModComms.sendTo(
+				ProjectEAPI.PROJECTE_MODID,
+				IMCMethods.REGISTER_CUSTOM_EMC,
+				() -> new CustomEMCRegistration(
+						NSSItem.createItem(ModItems.ONE_SEVEN_STONE.get()), 16_000L));
 	}
 }
 

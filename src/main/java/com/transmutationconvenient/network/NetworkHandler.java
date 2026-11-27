@@ -40,11 +40,12 @@ import java.util.function.Supplier;
  * <ul>
  *   <li>{@link BucketDataPacket}：同步黑洞之桶每一格的實際總量與流體清單。</li>
  *   <li>{@link ProjectESimplificationPacket}：同步 ProjectE 精簡狀態，重建創造標籤。</li>
+ *   <li>{@link StunPacket}：1.7.石命中玩家時，讓客戶端鎖住移動與視角 0.2 秒。</li>
  * </ul>
  */
 public final class NetworkHandler {
 
-	private static final String PROTOCOL = "3";
+	private static final String PROTOCOL = "4";
 
 	public static SimpleChannel CHANNEL;
 
@@ -70,6 +71,8 @@ public final class NetworkHandler {
 				CurioUsePacket::encode, CurioUsePacket::decode, CurioUsePacket::handle);
 		CHANNEL.registerMessage(6, CurioModePacket.class,
 				CurioModePacket::encode, CurioModePacket::decode, CurioModePacket::handle);
+		CHANNEL.registerMessage(7, StunPacket.class,
+				StunPacket::encode, StunPacket::decode, StunPacket::handle);
 	}
 
 	/** 伺服器 → 客戶端：同步 ProjectE 精簡狀態，讓創造標籤重建。 */
@@ -242,6 +245,27 @@ public final class NetworkHandler {
 			NetworkEvent.Context context = ctx.get();
 			context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
 					() -> () -> ClientPacketHandlers.applyBucketData(containerId, counts, fluids)));
+			context.setPacketHandled(true);
+		}
+	}
+
+	/** 伺服器 → 客戶端：1.7.石命中玩家，鎖住移動與視角 ticks 刻。 */
+	public record StunPacket(int ticks, float yaw, float pitch) {
+
+		public void encode(FriendlyByteBuf buf) {
+			buf.writeVarInt(ticks);
+			buf.writeFloat(yaw);
+			buf.writeFloat(pitch);
+		}
+
+		public static StunPacket decode(FriendlyByteBuf buf) {
+			return new StunPacket(buf.readVarInt(), buf.readFloat(), buf.readFloat());
+		}
+
+		public void handle(Supplier<NetworkEvent.Context> ctx) {
+			NetworkEvent.Context context = ctx.get();
+			context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+					() -> () -> ClientPacketHandlers.applyStun(ticks, yaw, pitch)));
 			context.setPacketHandled(true);
 		}
 	}

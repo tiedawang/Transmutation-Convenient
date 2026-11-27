@@ -13,7 +13,8 @@
 		"RepairTalismanMixin"
 	],
 	"client": [
-		"RecipeTransferServiceMixin"
+		"RecipeTransferServiceMixin",
+		"StunMouseMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

@@ -1,0 +1,6 @@
+{
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "transmutationconvenient:item/one_seven_stone"
+	}
+}

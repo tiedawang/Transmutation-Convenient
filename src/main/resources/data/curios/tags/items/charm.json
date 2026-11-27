@@ -1,6 +1,7 @@
 {
 	"replace": false,
 	"values": [
-		"projecte:interdiction_torch"
+		"projecte:interdiction_torch",
+		"transmutationconvenient:one_seven_stone"
 	]
 }
